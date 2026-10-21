@@ -16,7 +16,7 @@ Steps:
    - If user passed a task prompt: use it verbatim.
    - Else: use the default planning tick prompt:
      ```
-     Read task_plan.md and progress.md from docs/harness/plans/ (the active plan directory; fall back to legacy root files). Run scripts/check-complete.sh to see remaining phases.
+     Read task_plan.md and progress.md from docs/harness/plans/ (the active plan directory; fall back to legacy root files). Run ~/.claude/skills/planning-with-files/scripts/check-complete.sh to see remaining phases.
      If no progress.md entry has been added since the last loop tick, write one summarizing the current state.
      If a phase finished, update its Status: line in task_plan.md.
      Continue the next phase if work remains.
@@ -33,5 +33,5 @@ Why this exists:
 Notes:
 
 - `/plan-loop` composes with `/loop`; it does not replace it. `/loop 5m "anything"` still works.
-- For "babysit until plan is done" semantics: combine `/plan-loop 10m` (cadence) with `/plan-goal` (termination criterion). The loop runs every 10 minutes; the goal stops the loop when the plan is complete.
+- For "babysit until plan is done" semantics: combine `/plan-loop 10m` (cadence) with a completion goal — issue `/goal "all phases in task_plan.md report Status: complete and check-complete.sh reports ALL PHASES COMPLETE"` (there is no `/plan-goal` command in this pack; the native `/goal` primitive is always available). The loop runs every 10 minutes; the goal stops the loop when the plan is complete.
 - The default tick prompt is intentionally short so it stays within compaction-safe length.

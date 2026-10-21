@@ -18,13 +18,21 @@ Steps:
 
 An explicit `${PLAN_ID}` or `${PWF_PLAN_ROOT}` that does not resolve exits with an error. It never falls back to another plan.
 
-Implementation:
-- On Linux/macOS/Git Bash: `sh ${CLAUDE_PLUGIN_ROOT}/scripts/attest-plan.sh`
-- On Windows PowerShell plugin installs: `& "$env:CLAUDE_PLUGIN_ROOT\scripts\attest-plan.ps1"`
-- On Windows PowerShell standalone installs: `& "$env:USERPROFILE\.claude\skills\planning-with-files\scripts\attest-plan.ps1"`
+Implementation (first match wins; in this pack the standalone skill route is the primary one — `${CLAUDE_PLUGIN_ROOT}` is only set for plugin installs):
+- Git Bash / macOS / Linux standalone (this pack's default layout): `sh ~/.claude/skills/planning-with-files/scripts/attest-plan.sh`
+- Windows PowerShell standalone installs: `& "$env:USERPROFILE\.claude\skills\planning-with-files\scripts\attest-plan.ps1"`
+- Plugin installs (Bash): `sh ${CLAUDE_PLUGIN_ROOT}/scripts/attest-plan.sh`
+- Windows PowerShell plugin installs: `& "$env:CLAUDE_PLUGIN_ROOT\scripts\attest-plan.ps1"`
 
 Flags:
 - `--show` — print the currently stored hash and where it lives.
 - `--clear` — remove the attestation (re-open the plan to free editing).
+- `--show` and `--clear` must be the only argument (attest-plan.sh rejects any
+  other combination with a usage error) — they CANNOT be combined with
+  `--target root`. For `docs/harness/plans/` locations, run them with the cwd
+  at the plan directory (legacy fallback resolves `./task_plan.md` there);
+  the `PWF_PLAN_ROOT` pin alone is not enough, because pin mode looks for
+  `${PWF_PLAN_ROOT}/.planning/` subdirectories. The write path (`--target
+  root` + `PWF_PLAN_ROOT`) has no such restriction.
 
 After running this command, every UserPromptSubmit and PreToolUse hook fire compares `task_plan.md` against the stored hash. If they diverge, the hook emits `[PLAN TAMPERED — injection blocked]` instead of feeding plan content into the model. Re-run `/plan-attest` whenever you intentionally edit and re-approve the plan.

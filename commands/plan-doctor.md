@@ -7,8 +7,9 @@ allowed-tools: "Bash"
 Run the planning-with-files self-check against the current project (plans expected under `docs/harness/plans/`).
 
 Steps:
-1. Run the doctor script from the project root:
-   - Linux/macOS/Git Bash: `sh ${CLAUDE_PLUGIN_ROOT}/scripts/plan-doctor.sh`
+1. Run the doctor script from the project root (first match wins; the standalone skill route is this pack's default — `${CLAUDE_PLUGIN_ROOT}` is only set for plugin installs):
+   - Git Bash / macOS / Linux standalone: `sh ~/.claude/skills/planning-with-files/scripts/plan-doctor.sh`
+   - Plugin installs (Bash): `sh ${CLAUDE_PLUGIN_ROOT}/scripts/plan-doctor.sh`
    - Windows without Git Bash on PATH: locate Git Bash via `git.exe` (its `usr\bin\sh.exe` sibling) and run the same script with it.
    - Note: plans are expected under `docs/harness/plans/`. If a plan exists there but the doctor can't see it, re-run with `PWF_PLAN_ROOT` set to the absolute `docs/harness/plans` path (or the specific plan directory) so the resolver is pinned correctly.
 2. Report the PASS/WARN/FAIL lines to the user verbatim — they are designed to be read as-is.
