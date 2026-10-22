@@ -33,5 +33,5 @@ Why this exists:
 Notes:
 
 - `/plan-loop` composes with `/loop`; it does not replace it. `/loop 5m "anything"` still works.
-- For "babysit until plan is done" semantics: combine `/plan-loop 10m` (cadence) with a completion goal — issue `/goal "all phases in task_plan.md report Status: complete and check-complete.sh reports ALL PHASES COMPLETE"` (there is no `/plan-goal` command in this pack; the native `/goal` primitive is always available). The loop runs every 10 minutes; the goal stops the loop when the plan is complete.
+- For "babysit until plan is done" semantics: combine `/plan-loop 10m` (cadence) with `/plan-goal` (termination criterion). The loop runs every 10 minutes; the goal stops the loop when the plan is complete.
 - The default tick prompt is intentionally short so it stays within compaction-safe length.
